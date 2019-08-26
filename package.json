@@ -1,0 +1,27 @@
+{
+  "name": "use-current-effect",
+  "version": "1.0.2",
+  "description": "useEffect hook with injected current flag",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Flufd/use-current-effect.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Flufd/use-current-effect/issues"
+  },
+  "homepage": "https://github.com/Flufd/use-current-effect#readme",
+  "dependencies": {
+    "react": "^16.8.0"
+  },
+  "devDependencies": {
+    "@types/react": "^16.8.0",
+    "typescript": "^3.5.3"
+  }
+}

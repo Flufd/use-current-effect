@@ -1,9 +1,11 @@
 # useCurrentEffect
 
-Sometimes we need to track if an effect has been cleaned up, because one of it's dependencies has changed. The `useCurrentEffect` hook gives us a helper parameter to track this state without the boilerplate.
+Sometimes we need to track if an effect has been cleaned up, because one of it's dependencies has changed, or the component was unmounted. The `useCurrentEffect` hook gives us a helper parameter to track this state without the usual boilerplate.
 
 ## Installation
 `npm i use-current-effect` or just copy the hook from this repo
+
+## Motivation
 
 Dan Abramov shows us how we can track if the effect has been "cancelled" here https://overreacted.io/a-complete-guide-to-useeffect/#speaking-of-race-conditions
 
@@ -40,7 +42,7 @@ useCurrentEffect((effectState) => {
   fetchData();
 }, [id]);
 ```
-Any clean up function returned by the first effect parameter function will be called after the flag has been set, so you may still unsubscribe from subscriptions etc.
+Any regular clean up function returned by the first effect parameter function will still be called after the `ìsCurrent` flag has been set, so you may still unsubscribe from subscriptions, or do other cleanup as usual.
 
 Note that deconstructing the parameter as `({ isCurrent })` will cause issues, because doing so effectively creates a copy of boolean field, scoped to the effect function only, which will not be mutated by the cleanup.
 

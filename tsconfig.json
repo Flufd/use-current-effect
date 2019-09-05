@@ -5,6 +5,8 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
+    "declaration": true,
+    "declarationDir": "./dist",
     "outDir": "./dist",
     "lib": ["es2015"]
   },

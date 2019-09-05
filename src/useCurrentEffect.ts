@@ -1,10 +1,14 @@
 import { useEffect } from "react";
 type EffectState = { isCurrent: boolean };
 
-// Essentially this is a wrapper around useEffect that passes
-// in an mutable object with a isCurrent flag as the parameter
-// This flag is passed into the effect callback and the `isCurrent` field
-// can be used to see if the original effect was cleaned up or if the component was unmounted
+/**
+ * Create useEffect with a parameter to track the life of the effect
+ *
+ * @param callback The effect to run, it will be passed a
+ * {@link EffectState} that can be used to track if the effect was cleaned up
+ * @param deps The dependencies of the effect. When they change,
+ * the original effect's isCurrent state param will be set to false
+ */
 export function useCurrentEffect(
   callback: ((effectState: EffectState) => void) | ((effectState: EffectState) => () => void),
   deps?: []

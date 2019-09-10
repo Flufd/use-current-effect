@@ -31,10 +31,10 @@ useEffect(() => {
 With `useCurrentEffect` you can do away with this boilerplate and clean up your effects...
 
 ```Javascript
-useCurrentEffect((effectState) => {
+useCurrentEffect((isCurrent) => {
   async function fetchData() {
     const article = await API.fetchArticle(id);
-    if (effectState.isCurrent) {
+    if (isCurrent()) {
       setArticle(article);
     }
   }
@@ -42,13 +42,12 @@ useCurrentEffect((effectState) => {
   fetchData();
 }, [id]);
 ```
-Any regular clean up function returned by the first effect parameter function will still be called after the `ìsCurrent` flag has been set, so you may still unsubscribe from subscriptions, or do other cleanup as usual.
 
-Note that deconstructing the parameter as `({ isCurrent })` will cause issues, because doing so effectively creates a copy of boolean field, scoped to the effect function only, which will not be mutated by the cleanup.
+Any regular clean up function returned by the first effect parameter function will still be called after the `ìsCurrent` flag has been set, so you may still unsubscribe from subscriptions, or do other cleanup as usual.
 
 ## ESLint
 
-If you use the ESLint rule `react-hooks/exhaustive-deps` then you can add the `useCurrentEffect` to your `additionalHooks` Regex in your `.eslint` to ensure that you don't miss any dependencies.
+If you use the ESLint rule `react-hooks/exhaustive-deps` then you can add the `useCurrentEffect` to your `additionalHooks` regex in your `.eslint` to ensure that you don't miss any dependencies.
 
 ```JSON
 "react-hooks/exhaustive-deps": ["warn", { "additionalHooks": "useCurrentEffect" }],

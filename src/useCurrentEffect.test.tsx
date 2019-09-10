@@ -1,23 +1,9 @@
-import React, { useState } from "react";
-import { render, getByTestId } from "@testing-library/react";
+import React from "react";
+import { render } from "@testing-library/react";
 import { useCurrentEffect } from "./useCurrentEffect";
 
 jest.useFakeTimers();
 
-type Article = { name: string; content: string };
-type Api = { getArticle: (id: number) => Promise<Article> };
-
-// A testing component for us
-const TestHarness: React.FC<{ api: Api }> = ({ api }) => {
-  const [article, setArticle] = useState(null);
-  const [articleId, setArticleId] = useState(null);
-
-  useCurrentEffect(() => {
-    api.getArticle(articleId);
-  }, [articleId]);
-
-  return <div data-testid="teste"></div>;
-};
 describe("useCurrentEffect", () => {
   it("Calls the effect on initial render", () => {
     // Set up a function to check was called inside the effect

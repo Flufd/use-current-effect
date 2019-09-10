@@ -9,8 +9,7 @@
     "declaration": true,
     "declarationDir": "./dist",
     "outDir": "./dist",
-    "lib": ["es2015","dom"],
-    "jsx": "react"
+    "lib": ["es2015"]
   },
   "include": ["src/**/*"],
   "exclude": ["./node_modules/**/*", "src/**/*.test.tsx"]

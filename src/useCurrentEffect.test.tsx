@@ -94,11 +94,6 @@ describe("useCurrentEffect", () => {
     expect(testCleanup).toHaveBeenCalledTimes(2);
   });
 
-  const delay = async (ms: number) =>
-    new Promise((resolve: TimerHandler, reject: any) => {
-      setTimeout(resolve, ms);
-    });
-
   it("Sets isCurrent result to false when the dependencies change", async () => {
     const spy = jest.fn();
 

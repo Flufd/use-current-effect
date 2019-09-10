@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, DependencyList } from "react";
 type EffectState = { isCurrent: boolean };
 
 /**
@@ -11,7 +11,7 @@ type EffectState = { isCurrent: boolean };
  */
 export function useCurrentEffect(
   callback: ((effectState: EffectState) => void) | ((effectState: EffectState) => () => void),
-  deps?: []
+  deps?: DependencyList
 ) {
   let effectState: EffectState = { isCurrent: true };
   useEffect(() => {

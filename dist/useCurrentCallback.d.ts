@@ -1,5 +1,4 @@
-declare type CallbackState = {
-    isCurrent: boolean;
-};
-export declare function useCurrentCallback<T extends (...args: any[]) => any>(callbackFactory: (callbackState: CallbackState) => T, deps?: []): (args: any) => void;
+import { DependencyList } from "react";
+declare type CheckCurrent = () => boolean;
+export declare function useCurrentCallback<T extends (...args: any[]) => any>(callbackFactory: (isCurrent: CheckCurrent) => T, deps?: DependencyList): (args: any) => void;
 export {};

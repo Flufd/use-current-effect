@@ -1,5 +1,4 @@
-declare type EffectState = {
-    isCurrent: boolean;
-};
-export declare function useCurrentEffect(callback: ((effectState: EffectState) => void) | ((effectState: EffectState) => () => void), deps?: []): void;
+import { DependencyList } from "react";
+declare type CheckCurrent = () => boolean;
+export declare function useCurrentEffect(callback: ((isCurrent: CheckCurrent) => void) | ((isCurrent: CheckCurrent) => () => void), deps?: DependencyList): void;
 export {};

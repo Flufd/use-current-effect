@@ -99,14 +99,14 @@ describe("useCurrentEffect", () => {
       setTimeout(resolve, ms);
     });
 
-  it("Sets isCurrent to false when the dependencies change", async () => {
+  it("Sets isCurrent result to false when the dependencies change", async () => {
     const spy = jest.fn();
 
     const TestHarness: React.FC<{ id: number }> = ({ id }) => {
       useCurrentEffect(
-        effectState => {
+        isCurrent => {
           setTimeout(() => {
-            if (effectState.isCurrent) {
+            if (isCurrent()) {
               spy(id);
             }
           }, 100);

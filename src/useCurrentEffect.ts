@@ -1,24 +1,28 @@
 import { useEffect, DependencyList } from "react";
-type EffectState = { isCurrent: boolean };
+type CheckCurrent = () => boolean;
 
 /**
  * Create useEffect with a parameter to track the life of the effect
  *
  * @param callback The effect to run, it will be passed a
- * {@link EffectState} that can be used to track if the effect was cleaned up
+ * function that can be called to track if the effect was cleaned up
  * @param deps The dependencies of the effect. When they change,
- * the original effect's isCurrent state param will be set to false
+ * the result of the current check function will be false
  */
 export function useCurrentEffect(
-  callback: ((effectState: EffectState) => void) | ((effectState: EffectState) => () => void),
+  callback:
+    | ((isCurrent: CheckCurrent) => void)
+    | ((isCurrent: CheckCurrent) => () => void),
   deps?: DependencyList
 ) {
-  let effectState: EffectState = { isCurrent: true };
+  let isCurrent = true;
+  const currentCheck = () => isCurrent;
+
   useEffect(() => {
-    const cleanup = callback(effectState);
+    const cleanup = callback(currentCheck);
     return () => {
       // We set the current flag to false in the cleanup
-      effectState.isCurrent = false;
+      isCurrent = false;
       cleanup && cleanup();
     };
   }, deps); // eslint-disable-line react-hooks/exhaustive-deps

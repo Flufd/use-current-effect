@@ -1,5 +1,5 @@
-import { useCallback, useEffect } from "react";
-type CallbackState = { isCurrent: boolean };
+import { useCallback, useEffect, DependencyList } from "react";
+type CheckCurrent = () => boolean;
 
 /**
  * Create useCurrentCallback with a parameter to track the life of the callback
@@ -10,17 +10,20 @@ type CallbackState = { isCurrent: boolean };
  * the original callback's isCurrent state param will be set to false
  */
 export function useCurrentCallback<T extends (...args: any[]) => any>(
-  callbackFactory: (callbackState: CallbackState) => T,
-  deps?: []
+  callbackFactory: (isCurrent: CheckCurrent) => T,
+  deps?: DependencyList
 ): (args: any) => void {
-  let state = { isCurrent: true };
+  let isCurrent = true;
+  const currentCheck = () => isCurrent;
 
-  useEffect(() => {
-    return () => {
-      state.isCurrent = false;
-    };
-  }, deps); // eslint-disable-line react-hooks/exhaustive-deps
+  // useEffect clean up to react to the dependencies changing
+  useEffect(
+    () => () => {
+      isCurrent = false;
+    },
+    deps // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
-  // create the callback using the factory function, injecting the state
-  return useCallback(callbackFactory(state), deps);
+  // create the callback using the factory function, injecting the current check function
+  return useCallback(callbackFactory(currentCheck), deps);
 }

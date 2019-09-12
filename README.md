@@ -1,13 +1,33 @@
 # useCurrentEffect
 
-Sometimes we need to track if an effect has been cleaned up, because one of it's dependencies has changed, or the component was unmounted. The `useCurrentEffect` hook gives us a helper parameter to track this state without the usual boilerplate.
+Sometimes we need to track if an effect has been cleaned up, because one of it's dependencies has changed, or the component was unmounted. The `useCurrentEffect` hook gives us a helper function as a parameter to track this state without the usual boilerplate.
 
 ## Installation
-`npm i use-current-effect` or just copy the hook from this repo
+
+`npm i use-current-effect`
+
+## Use
+
+```Javascript
+import { useCurrentEffect } from "use-current-effect";
+
+// ...
+
+useCurrentEffect((isCurrent) => {
+  async function fetchData() {
+    const article = await API.fetchArticle(id);
+    if (isCurrent()) {
+      setArticle(article);
+    }
+  }
+
+  fetchData();
+}, [id]);
+```
 
 ## Motivation
 
-Dan Abramov shows us how we can track if the effect has been "cancelled" here https://overreacted.io/a-complete-guide-to-useeffect/#speaking-of-race-conditions
+You could do this manually like this each time you want to make this check:
 
 ```JavaScript
 useEffect(() => {
@@ -28,22 +48,24 @@ useEffect(() => {
 }, [id]);
 ```
 
-With `useCurrentEffect` you can do away with this boilerplate and clean up your effects...
+With `useCurrentEffect` you can do away with this boilerplate and make your effects more consise.
 
-```Javascript
-useCurrentEffect((isCurrent) => {
-  async function fetchData() {
-    const article = await API.fetchArticle(id);
-    if (isCurrent()) {
-      setArticle(article);
-    }
-  }
+## Callbacks
 
-  fetchData();
-}, [id]);
+There is also `useCurrentCallback` which works in a similar way, however as the consumer of the hook may want to pass parameters to the callback function, we must use a slightly different pattern. `useCurrentCallback` takes a generator function so you may inject the checker function.
+
+```jsx
+const onSearchOrders = useCurrentCallback(
+  isCurrent => searchParams => {
+    api.searchOrders(customerId, searchParams).then(results => {
+      if (isCurrent()) {
+        setSearchResults(results);
+      }
+    });
+  },
+  [customerId]
+);
 ```
-
-Any regular clean up function returned by the first effect parameter function will still be called after the `ìsCurrent` flag has been set, so you may still unsubscribe from subscriptions, or do other cleanup as usual.
 
 ## ESLint
 

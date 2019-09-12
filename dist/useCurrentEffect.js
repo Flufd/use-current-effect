@@ -2,9 +2,9 @@
 exports.__esModule = true;
 var react_1 = require("react");
 function useCurrentEffect(callback, deps) {
-    var isCurrent = true;
-    var currentCheck = function () { return isCurrent; };
     react_1.useEffect(function () {
+        var isCurrent = true;
+        var currentCheck = function () { return isCurrent; };
         var cleanup = callback(currentCheck);
         return function () {
             isCurrent = false;

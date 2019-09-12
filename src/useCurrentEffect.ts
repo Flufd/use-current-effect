@@ -10,15 +10,12 @@ type CheckCurrent = () => boolean;
  * the result of the current check function will be false
  */
 export function useCurrentEffect(
-  callback:
-    | ((isCurrent: CheckCurrent) => void)
-    | ((isCurrent: CheckCurrent) => () => void),
+  callback: ((isCurrent: CheckCurrent) => void) | ((isCurrent: CheckCurrent) => () => void),
   deps?: DependencyList
 ) {
-  let isCurrent = true;
-  const currentCheck = () => isCurrent;
-
   useEffect(() => {
+    let isCurrent = true;
+    const currentCheck = () => isCurrent;
     const cleanup = callback(currentCheck);
     return () => {
       // We set the current flag to false in the cleanup

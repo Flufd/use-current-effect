@@ -1,11 +1,11 @@
 {
   "name": "use-current-effect",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "useEffect hook with injected current flag",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
-    "build": "npx tsc src/index.ts"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",

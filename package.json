@@ -1,6 +1,6 @@
 {
   "name": "use-current-effect",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "useEffect hook with injected lifecycle checking method",
   "main": "dist/index.js",
   "scripts": {

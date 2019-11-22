@@ -1,8 +1,12 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, RenderOptions } from "@testing-library/react";
 import { useCurrentEffect } from "./useCurrentEffect";
 
 jest.useFakeTimers();
+
+function renderStrict(component: React.ReactElement, options? : RenderOptions) {
+  return render(<React.StrictMode>{component}</React.StrictMode>, options);
+}
 
 describe("useCurrentEffect", () => {
   it("Calls the effect on initial render", () => {
@@ -17,7 +21,7 @@ describe("useCurrentEffect", () => {
       return <></>;
     };
 
-    render(<TestHarness />);
+    renderStrict(<TestHarness />);
 
     expect(testEffect).toHaveBeenCalled();
   });
@@ -34,9 +38,9 @@ describe("useCurrentEffect", () => {
     };
 
     // Render 3 times with different id prop
-    const { container } = render(<TestHarness id={1} />);
-    render(<TestHarness id={2} />, { container });
-    render(<TestHarness id={3} />, { container });
+    const { container } = renderStrict(<TestHarness id={1} />);
+    renderStrict(<TestHarness id={2} />, { container });
+    renderStrict(<TestHarness id={3} />, { container });
 
     expect(testEffect).toHaveBeenCalledTimes(3);
   });
@@ -53,8 +57,8 @@ describe("useCurrentEffect", () => {
     };
 
     // Render 2 times with the same id prop
-    const { container } = render(<TestHarness id={1} />);
-    render(<TestHarness id={1} />, { container });
+    const { container } = renderStrict(<TestHarness id={1} />);
+    renderStrict(<TestHarness id={1} />, { container });
 
     expect(testEffect).toHaveBeenCalledTimes(1);
   });
@@ -72,20 +76,22 @@ describe("useCurrentEffect", () => {
     };
 
     // Render 3 times with different id prop, once with the same
-    const { container } = render(<TestHarness id={1} />);
-    render(<TestHarness id={2} />, { container });
-    render(<TestHarness id={3} />, { container });
-    render(<TestHarness id={3} />, { container });
+    const { container } = renderStrict(<TestHarness id={1} />);
+    renderStrict(<TestHarness id={2} />, { container });
+    renderStrict(<TestHarness id={3} />, { container });
+    renderStrict(<TestHarness id={3} />, { container });
 
     expect(testCleanup).toHaveBeenCalledTimes(2);
   });
 
   it("Sets isCurrent result to false when the dependencies change", async () => {
     const spy = jest.fn();
+    const effectSpy = jest.fn();
 
     const TestHarness: React.FC<{ id: number }> = ({ id }) => {
       useCurrentEffect(
         isCurrent => {
+          effectSpy();
           setTimeout(() => {
             if (isCurrent()) {
               spy(id);
@@ -99,12 +105,15 @@ describe("useCurrentEffect", () => {
     };
 
     // Render with initial prop
-    const { container } = render(<TestHarness id={1} />);
+    const { container } = renderStrict(<TestHarness id={1} />);
     // Render again with different id prop before the timeout is resolved
-    render(<TestHarness id={2} />, { container });
+    renderStrict(<TestHarness id={2} />, { container });
 
     // Resolve the timeout
     jest.advanceTimersByTime(150);
+
+    // The side effect that hasn't been protected should be called twice
+    expect(effectSpy).toHaveBeenCalledTimes(2);
 
     // Spy should have only been called once, with second id
     expect(spy).toHaveBeenCalledTimes(1);
